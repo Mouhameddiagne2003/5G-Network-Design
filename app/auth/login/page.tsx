@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Antenna, Mail, Lock } from "lucide-react";
 import { useAuthStore } from "@/stores/authStore";
-
+import { login } from "@/services/auth";
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -29,13 +29,17 @@ export default function Login() {
     if (err) { setError(err); return; }
     setIsLoading(true);
     try {
-      const { login } = await import("@/services/auth");
       const data = await login(email, password);
+      console.log(data);
       useAuthStore.getState().setUser(data.user);
       useAuthStore.getState().setToken(data.token || null);
+
+      console.log("token", useAuthStore.getState().token);
+      console.log("user", useAuthStore.getState().user);
       router.push("/projects");
     } catch (e: any) {
       setError(e.message);
+      console.error(e);
     } finally {
       setIsLoading(false);
     }
@@ -100,6 +104,13 @@ export default function Login() {
               >
                 {isLoading ? "Connexion..." : "Se connecter"}
               </Button>
+
+              {/* Affichage du message d'erreur */}
+              {error && (
+                <div className="w-full bg-red-600/80 text-white text-center rounded-md py-2 px-4 mb-2 animate-pulse border border-red-700">
+                  {error}
+                </div>
+              )}
 
               <div className="text-center">
                 <p className="text-slate-400">

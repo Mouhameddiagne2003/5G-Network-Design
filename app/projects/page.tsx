@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -7,40 +7,39 @@ import { Badge } from "@/components/ui/badge";
 import { Plus, Eye, Edit, Trash2, MapPin, Users, Signal } from "lucide-react";
 import { Layout } from "@/components/Layout";
 
+import { useAuthStore } from "@/stores/authStore";
+
 const Projects = () => {
-  // Données d'exemple (à remplacer par des données de Supabase)
-  const [projects] = useState([
-    {
-      id: 1,
-      name: "Réseau 5G Paris Centre",
-      area: 25.5,
-      userDensity: 1200,
-      frequency: 3.5,
-      bandwidth: 100,
-      createdAt: "2024-01-15",
-      status: "Complété"
-    },
-    {
-      id: 2,
-      name: "Déploiement Lyon Part-Dieu",
-      area: 15.8,
-      userDensity: 800,
-      frequency: 26,
-      bandwidth: 200,
-      createdAt: "2024-01-20",
-      status: "En cours"
-    },
-    {
-      id: 3,
-      name: "Zone Industrielle Marseille",
-      area: 45.2,
-      userDensity: 300,
-      frequency: 3.5,
-      bandwidth: 80,
-      createdAt: "2024-01-25",
-      status: "Brouillon"
-    }
-  ]);
+  const [projects, setProjects] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const user = useAuthStore((state) => state.user);
+  const userId = user?.id || user?.userId;
+
+  useEffect(() => {
+    let mounted = true;
+    const fetchProjects = async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        const { listProjects } = await import("@/services/project");
+        const data = await listProjects();
+        // Si le backend filtre déjà par user, pas besoin de filtrer ici
+        // Sinon, filtre côté client
+        setProjects(Array.isArray(data) ? data : []);
+      } catch (e: any) {
+        setError(e.message || "Erreur lors du chargement des projets");
+      } finally {
+        if (mounted) setLoading(false);
+      }
+    };
+    fetchProjects();
+    return () => { mounted = false; };
+  }, []);
+
+  const userProjects = projects.filter((p) => !userId || p.userId === userId);
+
+
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -195,7 +194,7 @@ const Projects = () => {
         </div>
 
         {/* Empty State */}
-        {projects.length === 0 && (
+        {userProjects.length === 0 && (
           <Card className="bg-blue-50 border-blue-100 text-center py-12">
             <CardContent>
               <Signal className="h-16 w-16 text-blue-200 mx-auto mb-4" />
