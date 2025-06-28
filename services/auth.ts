@@ -12,6 +12,7 @@ export async function login(email: string, password: string) {
 export function getAuthHeaders(): Record<string, string> {
   if (typeof window !== 'undefined') {
     const token = localStorage.getItem('token');
+    console.log(token);
     if (token) return { Authorization: `Bearer ${token}` };
   }
   return {};
