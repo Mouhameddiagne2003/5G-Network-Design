@@ -8,6 +8,7 @@ import { Progress } from "@/components/ui/progress";
 import { useRouter, useParams } from "next/navigation";
 import { Layout } from "@/components/Layout";
 import { ArrowLeft, Calculator, Signal, CheckCircle } from "lucide-react";
+import {calculateCoverage} from "@/services/project";
 
 const Coverage = () => {
   const router = useRouter();
@@ -23,12 +24,11 @@ const Coverage = () => {
   const [isCalculating, setIsCalculating] = useState(false);
 
   const [error, setError] = useState<string | null>(null);
-  const calculateCoverage = async () => {
+  const calculateCoveragee = async () => {
     setIsCalculating(true);
     setError(null);
     setResults(null);
     try {
-      const { calculateCoverage } = await import("@/services/project");
       const params = {
         receiverSensitivity: parseFloat(formData.receiverSensitivity),
         gainAntenne: parseFloat(formData.gainAntenne),
@@ -123,7 +123,7 @@ const Coverage = () => {
                 </div>
 
                 <Button
-                  onClick={calculateCoverage}
+                  onClick={calculateCoveragee}
                   disabled={isCalculating}
                   className="w-full bg-orange-500 hover:bg-orange-600 text-white"
                   type="button"

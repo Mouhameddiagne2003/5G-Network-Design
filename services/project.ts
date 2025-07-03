@@ -3,6 +3,8 @@ import { getAuthHeaders } from "./auth";
 
 // Calculs backend : Couverture
 export async function calculateCoverage(projectId: string, params: any) {
+  console.log("🚀 FRONTEND: Appel calculateCoverage avec projectId:", projectId);
+  console.trace(); // Pour voir d'où vient l'appel
   const res = await fetch(`http://localhost:4000/api/results/calculate-coverage/${projectId}`, {
     method: "POST",
     headers: { "Content-Type": "application/json", ...getAuthHeaders() },
@@ -16,6 +18,8 @@ export async function calculateCoverage(projectId: string, params: any) {
 
 // Calculs backend : Capacité
 export async function calculateCapacity(projectId: string, params: any) {
+  console.log("🚀 FRONTEND: Appel calculateCapacity avec projectId:", projectId);
+  console.trace(); // Pour voir d'où vient l'appel
   const res = await fetch(`http://localhost:4000/api/results/calculate-capacity/${projectId}`, {
     method: "POST",
     headers: { "Content-Type": "application/json", ...getAuthHeaders() },
@@ -29,6 +33,8 @@ export async function calculateCapacity(projectId: string, params: any) {
 
 // Calculs backend : Dimensionnement
 export async function calculateDimensionnement(projectId: string, params: any) {
+  console.log("🚀 FRONTEND: Appel calculateDimensionnement avec projectId:", projectId);
+  console.trace(); // Pour voir d'où vient l'appel
   const res = await fetch(`http://localhost:4000/api/results/calculate-dimensionnement/${projectId}`, {
     method: "POST",
     headers: { "Content-Type": "application/json", ...getAuthHeaders() },

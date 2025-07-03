@@ -9,6 +9,7 @@ import { Progress } from "@/components/ui/progress";
 import { useRouter, useParams } from "next/navigation";
 import { Layout } from "@/components/Layout";
 import { ArrowLeft, Calculator, Zap, CheckCircle } from "lucide-react";
+import { calculateCapacity } from "@/services/project";
 
 const Capacity = () => {
   const router = useRouter();
@@ -29,13 +30,12 @@ const Capacity = () => {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 
-  const calculateCapacity = async () => {
+  const calculateCapacityy = async () => {
     if (!projectId) return;
     setIsCalculating(true);
     setError(null);
     setResults(null);
     try {
-      const { calculateCapacity } = await import("@/services/project");
       const params = {
         SNR: parseFloat(formData.sinr),
         modulation: formData.modulation,
@@ -126,7 +126,7 @@ const Capacity = () => {
                 </div>
 
                 <Button
-                  onClick={calculateCapacity}
+                  onClick={calculateCapacityy}
                   disabled={isCalculating}
                   className="w-full bg-orange-500 hover:bg-orange-600 text-white"
                 >
